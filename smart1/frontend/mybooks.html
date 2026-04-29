@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Track your borrowed and returned books at SRKR Smart Library">
+  <title>My Books — SRKR Smart Library</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="config.js"></script>
+</head>
+<body>
+  <div id="navContainer"></div>
+  <div class="page-wrap">
+    <div class="main-content">
+      <div class="page-header"><h1>My Books</h1><p>Track your borrow requests and returned books</p></div>
+      <div class="summary-row" id="summaryRow">
+        <div class="card summary-card"><div class="summary-number blue" id="sumBorrowed">—</div><div class="summary-label">Borrowed</div></div>
+        <div class="card summary-card"><div class="summary-number accent" id="sumPending">—</div><div class="summary-label">Pending</div></div>
+        <div class="card summary-card"><div class="summary-number red" id="sumOverdue">—</div><div class="summary-label">Overdue</div></div>
+        <div class="card summary-card"><div class="summary-number green" id="sumTotal">—</div><div class="summary-label">Total Records</div></div>
+      </div>
+
+      <div class="table-wrap" id="booksTableWrap">
+        <table><thead><tr><th>#</th><th>Book</th><th>Accession</th><th>Status</th><th>Dates</th><th>Action</th></tr></thead>
+        <tbody id="booksBody"><tr><td colspan="6" style="text-align:center;padding:3rem;color:var(--gray);">Loading...</td></tr></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Return Confirm Modal -->
+  <div class="modal-overlay" id="returnModal" style="display:none;">
+    <div class="modal-content">
+      <h3>Confirm Return</h3>
+      <p id="returnModalMsg">Return this book?</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeReturnModal()">Cancel</button>
+        <button class="btn btn-danger" id="returnConfirmBtn" onclick="confirmReturn()">Return Book</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/mybooks.js"></script>
+</body>
+</html>

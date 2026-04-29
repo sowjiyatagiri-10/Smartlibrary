@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: smart-library-backend
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        value: https://smart-library-frontend.vercel.app
+      - key: DATABASE_URL
+        value: /var/data/smart_library.db
+
+databases:
+  - name: smart-library-db
+    plan: free
+    ipAllowList: []

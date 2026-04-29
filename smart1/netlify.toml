@@ -1,0 +1,10 @@
+# Netlify configuration for SRKR Smart Library Frontend
+# This ensures client-side routing works — all paths serve index.html
+
+[build]
+  publish = "frontend"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

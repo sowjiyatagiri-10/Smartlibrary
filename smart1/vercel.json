@@ -1,0 +1,27 @@
+{
+  "buildCommand": "cd backend && npm install",
+  "devCommand": "cd backend && npm run dev",
+  "outputDirectory": "frontend",
+  "env": {
+    "PORT": "3000",
+    "NODE_ENV": "production",
+    "SESSION_SECRET": "@generated_secret_key",
+    "FRONTEND_URL": "@generated_frontend_url"
+  },
+  "functions": {
+    "backend/server.js": {
+      "memory": 512,
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/backend/server.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/frontend/index.html"
+    }
+  ]
+}

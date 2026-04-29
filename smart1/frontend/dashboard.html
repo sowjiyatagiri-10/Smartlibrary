@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SRKR Smart Library Dashboard - View your library activity overview">
+  <title>Dashboard — SRKR Smart Library</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="config.js"></script>
+</head>
+<body>
+  <div id="navContainer"></div>
+
+  <div class="page-wrap">
+    <div class="main-content" id="dashboardContent">
+      <!-- Alert Banners -->
+      <div id="alertBanners"></div>
+
+      <!-- Welcome Banner -->
+      <div class="welcome-banner">
+        <h1 id="welcomeMsg">Loading...</h1>
+        <p id="welcomeSub">Here's your library activity overview</p>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid" id="statsGrid">
+        <div class="card stat-card">
+          <div class="stat-icon">📖</div>
+          <div class="stat-number blue" id="statBorrowed">—</div>
+          <div class="stat-label">Books Borrowed</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon">⏳</div>
+          <div class="stat-number accent" id="statPending">—</div>
+          <div class="stat-label">Pending Requests</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon">⚠️</div>
+          <div class="stat-number" id="statOverdue">—</div>
+          <div class="stat-label">Overdue Books</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon">📚</div>
+          <div class="stat-number green" id="statAvailable">—</div>
+          <div class="stat-label">Available in Library</div>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <h2 class="section-title">📋 Recent Activity</h2>
+      <div class="table-wrap" id="recentTableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Book Title</th>
+              <th>Status</th>
+              <th>Borrow Date</th>
+              <th>Due Date</th>
+              <th>Days</th>
+            </tr>
+          </thead>
+          <tbody id="recentBody">
+            <tr><td colspan="5" class="skeleton-cell"><div class="skeleton" style="height:18px;width:80%;margin:0 auto;"></div></td></tr>
+            <tr><td colspan="5" class="skeleton-cell"><div class="skeleton" style="height:18px;width:60%;margin:0 auto;"></div></td></tr>
+            <tr><td colspan="5" class="skeleton-cell"><div class="skeleton" style="height:18px;width:70%;margin:0 auto;"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <a href="catalog.html" class="btn btn-secondary">📚 Browse Catalog →</a>
+        <a href="mybooks.html" class="btn btn-secondary">📖 View My Books →</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

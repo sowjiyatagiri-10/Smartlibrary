@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SRKR Engineering College Smart Library Management System - Login">
+  <title>Login — SRKR Smart Library</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="config.js"></script>
+</head>
+
+<body>
+  <div class="login-page page-wrap">
+    <div class="logo">📚 SRKR Smart Library</div>
+    <p class="tagline">Smart Library Management System</p>
+
+    <div class="card login-card">
+      <!-- STEP 1 -->
+      <div id="step1" class="step">
+        <h2>Welcome</h2>
+        <p class="sub">Enter your college credentials to continue</p>
+        <div class="form-group">
+          <label for="regId">Register ID</label>
+          <input id="regId" type="text" placeholder="e.g. AN, AP, LIB01...">
+        </div>
+        <div class="form-group">
+          <label for="email">College Email</label>
+          <input id="email" type="email" placeholder="e.g. an@srkr.ac.in">
+        </div>
+        <div id="step1-error" class="error-msg" style="display:none"></div>
+        <button id="continueBtn" class="btn" onclick="verifyIdentity()">Continue →</button>
+      </div>
+
+      <!-- STEP 2 -->
+      <div id="step2" class="step">
+        <h2 id="greet">Hello!</h2>
+        <p class="sub">Enter your password to access the library</p>
+        <div id="roleBadgeWrap"></div>
+        <div class="pw-wrap">
+          <input id="password" type="password" placeholder="Enter your password">
+          <button class="eye-btn" onclick="togglePw()" type="button">👁</button>
+        </div>
+        <div id="step2-error" class="error-msg" style="display:none"></div>
+        <button id="loginBtn" class="btn" onclick="doLogin()">Login</button>
+        <a href="#" onclick="event.preventDefault(); goBack();" class="back-link">← Back</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentRegId = '';
+    let currentUserRole = 'student';
+
+    function showStep2(name, role) {
+      document.getElementById('greet').textContent = 'Hello, ' + name + '!';
+      const roleBadge = document.getElementById('roleBadgeWrap');
+      if (role === 'librarian') {
+        roleBadge.innerHTML = '<span class="register-badge" style="background:rgba(46,204,113,0.1);border-color:rgba(46,204,113,0.3);color:var(--green);">🔑 Librarian</span>';
+      } else {
+        roleBadge.innerHTML = '';
+      }
+      document.getElementById('step1').style.display = 'none';
+      document.getElementById('step2').style.display = 'block';
+      document.getElementById('password').focus();
+    }
+
+    function goBack() {
+      document.getElementById('step2').style.display = 'none';
+      document.getElementById('step1').style.display = 'block';
+      document.getElementById('step2-error').style.display = 'none';
+      document.getElementById('password').value = '';
+    }
+
+    function togglePw() {
+      const pw = document.getElementById('password');
+      const eyeBtn = pw.parentElement.querySelector('.eye-btn');
+      if (pw.type === 'password') { pw.type = 'text'; eyeBtn.textContent = '🙈'; }
+      else { pw.type = 'password'; eyeBtn.textContent = '👁'; }
+    }
+
+    async function verifyIdentity() {
+      const regIdInput = document.getElementById('regId').value.trim();
+      const emailInput = document.getElementById('email').value.trim();
+      const errorEl = document.getElementById('step1-error');
+      const btn = document.getElementById('continueBtn');
+      errorEl.style.display = 'none';
+
+      if (!regIdInput || !emailInput) {
+        errorEl.textContent = 'Please fill in both fields.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      const regId = regIdInput.toUpperCase();
+      const email = emailInput.toLowerCase();
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>';
+
+      try {
+        const res = await fetch(`${window.API_BASE}/api/auth/verify-identity`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ register_id: regId, email: email })
+        });
+
+        const data = await res.json();
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+
+        if (!res.ok) throw new Error(data.message || 'Server error');
+
+        if (!data.found) {
+          errorEl.textContent = data.message || 'Invalid Register ID or Email.';
+          errorEl.style.display = 'block';
+          return;
+        }
+
+        currentRegId = regId;
+        const user = data.user || {};
+        currentUserRole = user.role || 'student';
+
+        if (user.is_setup === 0) {
+          window.location.href = `setup-password.html?id=${encodeURIComponent(currentRegId)}`;
+          return;
+        }
+
+        showStep2(user.name || regId, currentUserRole);
+
+      } catch (err) {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        errorEl.textContent = err.message || 'Cannot connect to server.';
+        errorEl.style.display = 'block';
+      }
+    }
+
+    async function doLogin() {
+      const password = document.getElementById('password').value;
+      const errorEl = document.getElementById('step2-error');
+      const btn = document.getElementById('loginBtn');
+      errorEl.style.display = 'none';
+
+      if (!password) {
+        errorEl.textContent = 'Please enter your password.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>';
+
+      try {
+        const res = await fetch(`${window.API_BASE}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ register_id: currentRegId, password: password })
+        });
+
+        const data = await res.json();
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+
+        if (data.success) {
+          try { sessionStorage.setItem('loggedUser', JSON.stringify(data.user)); } catch (e) { }
+
+          const banner = document.createElement('div');
+          banner.className = 'toast success';
+          banner.style.cssText = 'position:fixed;top:20px;right:20px;z-index:9999;';
+          banner.textContent = `Logged in as ${data.user.name} (${data.user.register_id})`;
+          document.body.appendChild(banner);
+          setTimeout(() => { banner.style.opacity = '0'; setTimeout(() => banner.remove(), 300); }, 1200);
+
+          // Role-based redirect
+          const target = data.user.role === 'librarian' ? 'librarian-dashboard.html' : 'dashboard.html';
+          setTimeout(() => { window.location.href = target; }, 1400);
+        } else {
+          errorEl.textContent = data.message || 'Incorrect password.';
+          errorEl.style.display = 'block';
+        }
+
+      } catch (err) {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        errorEl.textContent = 'Cannot connect to server.';
+        errorEl.style.display = 'block';
+      }
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        const step2 = document.getElementById('step2');
+        if (step2.style.display === 'block') doLogin();
+        else verifyIdentity();
+      }
+    });
+
+    // Check if already logged in
+    (async function () {
+      try {
+        const res = await fetch(`${window.API_BASE}/api/auth/me`, { credentials: 'include' });
+        if (res.ok) {
+          const data = await res.json();
+          const target = data.user?.role === 'librarian' ? 'librarian-dashboard.html' : 'dashboard.html';
+          window.location.href = target;
+        }
+      } catch (e) { }
+    })();
+  </script>
+</body>
+
+</html>

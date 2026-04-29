@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SRKR Smart Library Librarian Dashboard - Manage borrow requests and student records">
+  <title>Librarian Dashboard — SRKR Smart Library</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="config.js"></script>
+</head>
+<body>
+  <div id="navContainer"></div>
+
+  <div class="page-wrap">
+    <div class="main-content">
+      <div class="welcome-banner">
+        <h1 id="welcomeMsg">Loading...</h1>
+        <p>Library Management Control Panel</p>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid" id="libStatsGrid">
+        <div class="card stat-card"><div class="stat-icon">📋</div><div class="stat-number accent" id="libPending">—</div><div class="stat-label">Pending Requests</div></div>
+        <div class="card stat-card"><div class="stat-icon">📖</div><div class="stat-number blue" id="libActive">—</div><div class="stat-label">Active Borrows</div></div>
+        <div class="card stat-card"><div class="stat-icon">⚠️</div><div class="stat-number red" id="libOverdue">—</div><div class="stat-label">Overdue Books</div></div>
+        <div class="card stat-card"><div class="stat-icon">👥</div><div class="stat-number green" id="libStudents">—</div><div class="stat-label">Total Students</div></div>
+      </div>
+
+      <!-- Tab Bar -->
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('pending', this)">📋 Pending <span class="tab-count" id="tabPendingCount"></span></button>
+        <button class="tab-btn" onclick="switchTab('active', this)">📖 Active Borrows</button>
+        <button class="tab-btn" onclick="switchTab('overdue', this)">⚠️ Overdue</button>
+        <button class="tab-btn" onclick="switchTab('students', this)">👥 Students</button>
+      </div>
+
+      <!-- Tab: Pending Requests -->
+      <div class="tab-panel" id="tab-pending">
+        <div class="table-wrap"><table><thead><tr>
+          <th>Student</th><th>Book</th><th>Accession</th><th>Requested</th><th>Actions</th>
+        </tr></thead><tbody id="pendingBody"><tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--gray);">Loading...</td></tr></tbody></table></div>
+      </div>
+
+      <!-- Tab: Active Borrows -->
+      <div class="tab-panel" id="tab-active" style="display:none;">
+        <div class="table-wrap"><table><thead><tr>
+          <th>Student</th><th>Book</th><th>Accession</th><th>Borrow Date</th><th>Due Date</th><th>Days</th><th>Action</th>
+        </tr></thead><tbody id="activeBody"><tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--gray);">Loading...</td></tr></tbody></table></div>
+      </div>
+
+      <!-- Tab: Overdue -->
+      <div class="tab-panel" id="tab-overdue" style="display:none;">
+        <div class="table-wrap"><table><thead><tr>
+          <th>Student</th><th>Book</th><th>Accession</th><th>Due Date</th><th>Overdue By</th><th>Action</th>
+        </tr></thead><tbody id="overdueBody"><tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--gray);">Loading...</td></tr></tbody></table></div>
+      </div>
+
+      <!-- Tab: Students -->
+      <div class="tab-panel" id="tab-students" style="display:none;">
+        <div class="filter-bar" style="margin-bottom:16px;">
+          <div class="search-wrap"><span class="search-icon">🔍</span>
+            <input type="text" id="studentSearch" placeholder="Search by name or ID..." oninput="filterStudents()">
+          </div>
+        </div>
+        <div class="table-wrap"><table><thead><tr>
+          <th>ID</th><th>Name</th><th>Email</th><th>Active</th><th>Overdue</th><th>Pending</th><th>Total</th>
+        </tr></thead><tbody id="studentsBody"><tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--gray);">Loading...</td></tr></tbody></table></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/librarian-dashboard.js"></script>
+</body>
+</html>
